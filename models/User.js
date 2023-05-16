@@ -26,12 +26,14 @@ email: {
 })
 
 UserSchema.pre('save', async function (next) {
+  console.log("find2")
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)
   next()
 })
 
 UserSchema.methods.createJWT = function () {
+  console.log("find1")
   return jwt.sign(
     { userId: this._id, name: this.name },
     process.env.JWT_SECRET,
@@ -42,7 +44,9 @@ UserSchema.methods.createJWT = function () {
 }
 
 UserSchema.methods.comparePassword = async function (canditatePassword) {
-  console.log(canditatePassword,this.password)
+  
+  console.log("find3")
+  console.log(canditatePassword,"canditate password",this.password)
   const isMatch = await bcrypt.compare(canditatePassword, this.password)
   return isMatch
 }
